@@ -1,0 +1,114 @@
+<section class="lux-sn-container">
+    <header class="lux-sn-header">
+        <h2 class="lux-sn-title" data-lfr-editable-id="sn-title" data-lfr-editable-type="text">
+            Active Incidents
+        </h2>
+        <div class="lux-sn-controls">
+            <!-- Filter inputs here -->
+        </div>
+    </header>
+
+    <div class="lux-sn-grid">
+        <!-- Incidents will be rendered here dynamically -->
+        <template id="lux-sn-item-template">
+            <div class="lux-sn-card">
+                <div class="lux-sn-card__badge {status-class}">{status-name}</div>
+                <h3 class="lux-sn-card__number">{number}</h3>
+                <p class="lux-sn-card__description">{description}</p>
+                <div class="lux-sn-card__footer">
+                    <span class="lux-sn-card__date">{date}</span>
+                    <span class="lux-sn-card__urgency {urgency-class}">{urgency-name}</span>
+                </div>
+            </div>
+        </template>
+    </div>
+</section>
+
+<style>
+.lux-sn-container {
+    --sn-card-bg: rgba(255, 255, 255, 0.05);
+    --sn-border: rgba(255, 255, 255, 0.1);
+    
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.lux-sn-title {
+    font-size: 2.5rem;
+    font-weight: 100;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.lux-sn-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.lux-sn-card {
+    background: var(--sn-card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--sn-border);
+    padding: 30px;
+    border-radius: 4px;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.lux-sn-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.lux-sn-card__badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+.lux-sn-card__number {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #007bff;
+    margin-bottom: 15px;
+}
+
+.lux-sn-card__description {
+    font-size: 1.1rem;
+    font-weight: 300;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    opacity: 0.8;
+}
+
+.lux-sn-card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--sn-border);
+    padding-top: 20px;
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
+
+/* Status Classes */
+.status-new { background: rgba(0, 123, 255, 0.2); color: #007bff; }
+.status-in-progress { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
+.status-resolved { background: rgba(40, 167, 69, 0.2); color: #28a745; }
+
+/* Urgency Classes */
+.urgency-high { color: #dc3545; font-weight: 700; }
+</style>
