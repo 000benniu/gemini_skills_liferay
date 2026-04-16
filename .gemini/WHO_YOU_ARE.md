@@ -14,6 +14,8 @@
 - 業務マニュアルAPI連携について -> `skills/manual-api-integration/SKILL.md` を参照
 - OpenAI API (gpt-4o-mini) の呼び出しについて -> `skills/gpt-4o-mini-caller/SKILL.md` を参照
 - AI駆動のタスク推奨機能について -> `skills/liferay-ai-task-advisor/SKILL.md` を参照
+- Liferay オブジェクト（Object Definition）の管理について -> `skills/liferay-object-management/SKILL.md` を参照
+- Liferay フラグメントコレクションのパッケージ化（ZIP作成）について -> `skills/liferay-fragment-packager/SKILL.md` を参照
 
 ## そのほか
 - 【絶対遵守】作成した結果物の表示およびコメント当は日本語を使ってください。
