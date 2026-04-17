@@ -1,60 +1,60 @@
 ---
 name: liferay-object-management
-description: Liferay DXP におけるオブジェクト定義（Object Definition）の動的な生成、公開、および管理ワークフロー
+description: Dynamic generation, publication, and management workflow for Object Definitions in Liferay DXP.
 ---
 
-# Liferay オブジェクト管理スキル (JS/Ajax 版)
+# Liferay Object Management Skill (JS/Ajax Version)
 
-このスキルは, Liferay DXP 上でオブジェクト定義（Object Definition）を動的に生成、公開、および管理するためのものです。Node.js や Python に依存せず、ブラウザまたはフラグメント上で動作する純粋な JavaScript (Fetch API) を使用します。
+This skill is for dynamically generating, publishing, and managing Object Definitions on Liferay DXP. It uses pure JavaScript (Fetch API) running on the browser or fragments without depending on Node.js or Python.
 
-## 技術制約
-- **言語**: JavaScript (ES6+)
-- **通信**: Fetch API / XMLHttpRequest (Ajax)
-- **禁止事項**: Node.js モジュール、TypeScript、Python、外部ライブラリ（jQuery等）への依存。
+## Technical Constraints
+- **Language**: JavaScript (ES6+)
+- **Communication**: Fetch API / XMLHttpRequest (Ajax)
+- **Prohibitions**: Dependencies on Node.js modules, TypeScript, Python, and external libraries (jQuery, etc.).
 
-## 実行プロトコル（ワークフロー）
+## Execution Protocol (Workflow)
 
-オブジェクト操作を行う際は、常に以下のステップを順守し、**進捗を console に出力すること。**
+When performing object operations, always adhere to the following steps and **output the progress to the console.**
 
-### 0. 環境設定の定義【絶対遵守】
-コードの先頭で以下の優先順位で変数を定義すること。
-1. **`.env.config` ファイル**: 存在すれば、その値を最優先で読み込む。
-2. **ハードコードされたデフォルト値**: ファイルがない、または値が定義されていない場合のフォールバックとして設定する。
+### 0. Environment Setting Definition [Strict Compliance]
+Define variables at the beginning of the code in the following order of priority.
+1. **`.env.config` file**: If it exists, read its value with the highest priority.
+2. **Hard-coded default values**: Set as a fallback if the file does not exist or the value is not defined.
 
-**実装プロトコル**:
-ルートディレクトリに `.env.config` が存在しない場合、以下のサンプル内容でファイルを自動生成すること。
+**Implementation Protocol**:
+If `.env.config` does not exist in the root directory, automatically generate the file with the following sample content.
 ```text
 LIFERAY_BASE_URL=http://localhost:8080
-# その他、必要な認証情報を追記
+# Add other necessary authentication information
 ```
 
-### 1. オブジェクトの存在確認 (GET)
-`/o/object-admin/v1.0/object-definitions?filter=name eq '${definition.name}'` を使用して、同名のオブジェクトが既に存在するか確認する。
+### 1. Check Object Existence (GET)
+Use `/o/object-admin/v1.0/object-definitions?filter=name eq '${definition.name}'` to check if an object with the same name already exists.
 
-### 2. オブジェクトの定義作成 (POST)
-存在しない場合、`/o/object-admin/v1.0/object-definitions` に対して詳細なペイロードを送信する。
-- **重要**: `externalReferenceCode` (ERC) は常に一意の値を生成（または指定）して含めること。
+### 2. Create Object Definition (POST)
+If it does not exist, send a detailed payload to `/o/object-admin/v1.0/object-definitions`.
+- **Important**: Always generate (or specify) and include a unique value for `externalReferenceCode` (ERC).
 
-### 3. オブジェクトの公開 (POST)
-作成直後は `draft` 状態のため、エントリを追加する前に公開（Publish）が必要。
-- **エンドポイント**: `/o/object-admin/v1.0/object-definitions/{objectDefinitionId}/publish`
+### 3. Publish Object (POST)
+Since it is in the `draft` state immediately after creation, publishing is required before adding entries.
+- **Endpoint**: `/o/object-admin/v1.0/object-definitions/{objectDefinitionId}/publish`
 
-### 4. エントリの追加 (POST)
-公開後、`/o/c/{pluralName}` またはオブジェクト定義で指定した `restContextPath` に対してデータを送信する。
+### 4. Add Entry (POST)
+After publishing, send data to `/o/c/{pluralName}` or the `restContextPath` specified in the object definition.
 
 ---
 
-## 詳細リファレンスとサンプル
+## Detailed References and Samples
 
-### オブジェクト定義ペイロードの構成例 (より詳細な例)
-オブジェクトを作成する際、様々なビジネスタイプ（Text, LongText, Date, Keyword等）を組み合わせた JSON 構造の例です。
+### Object Definition Payload Configuration Example (More Detailed Example)
+This is an example of a JSON structure combining various business types (Text, LongText, Date, Keyword, etc.) when creating an object.
 
 ```json
 {
   "active": true,
   "name": "Email",
-  "label": { "en_US": "Email", "ja_JP": "メール" },
-  "pluralLabel": { "en_US": "Emails", "ja_JP": "メール" },
+  "label": { "en_US": "Email", "ja_JP": "Email" },
+  "pluralLabel": { "en_US": "Emails", "ja_JP": "Emails" },
   "externalReferenceCode": "EMAIL_OBJECT_ERC",
   "scope": "company",
   "titleObjectFieldName": "subject",
@@ -107,11 +107,11 @@ LIFERAY_BASE_URL=http://localhost:8080
   ]
 }
 ```
-- **`indexedAsKeyword: true`**: `emailActionType` のように、特定のキーワードでフィルタリングや検索を行いたい場合に重要です。
-- **`businessType: "LongText"`**: メールの本文など、長文を格納するフィールドに使用します。
+- **`indexedAsKeyword: true`**: Important when you want to filter or search by specific keywords, such as `emailActionType`.
+- **`businessType: "LongText"`**: Used for fields storing long texts, such as the body of an email.
 
-### エントリの一括追加 (Bulk/Populate)
-オブジェクト定義が公開された後、ダミーデータや外部データを一括で投入する際の JavaScript 例です。
+### Bulk Add Entries (Bulk/Populate)
+Here is a JavaScript example for inserting dummy data or external data in bulk after the object definition is published.
 
 ```javascript
 const populateObjectEntries = async (pluralName, records) => {
@@ -126,7 +126,7 @@ const populateObjectEntries = async (pluralName, records) => {
 
   for (const [index, record] of records.entries()) {
     try {
-      // 各エントリには一意の ERC を含めることを推奨
+      // It is recommended to include a unique ERC in each entry
       if (!record.externalReferenceCode) {
         record.externalReferenceCode = `entry-${Date.now()}-${index}`;
       }
@@ -146,12 +146,12 @@ const populateObjectEntries = async (pluralName, records) => {
 };
 ```
 
-### リレーションシップ（関連）フィールドの扱い
-他のオブジェクトやアカウントに関連付ける場合、フィールド名は `r_{relationshipName}_{relatedObject}Id` という形式になります。
-- **例**: `r_accountToEmail_accountEntryId`: `12345` (Integer ID)
-- **注意**: ID は直接の数値として渡し、オブジェクトで囲む必要はありません。
+### Handling Relationship Fields
+When relating to other objects or accounts, the field name takes the format `r_{relationshipName}_{relatedObject}Id`.
+- **Example**: `r_accountToEmail_accountEntryId`: `12345` (Integer ID)
+- **Note**: Pass the ID directly as a number; it does not need to be enclosed in an object.
 
-### 実装サンプル (Pure JS - Liferay Fragment Context)
+### Implementation Sample (Pure JS - Liferay Fragment Context)
 
 ```javascript
 const createObjectFullFlow = async (definition) => {
@@ -161,7 +161,7 @@ const createObjectFullFlow = async (definition) => {
     'x-csrf-token': Liferay.authToken
   };
 
-  // 1. 作成
+  // 1. Create
   console.info(`Creating object definition: ${definition.name}...`);
   const createRes = await fetch('/o/object-admin/v1.0/object-definitions', {
     method: 'POST',
@@ -171,14 +171,14 @@ const createObjectFullFlow = async (definition) => {
   const newObj = await createRes.json();
   const objId = newObj.id;
 
-  // 2. 公開
+  // 2. Publish
   console.info(`Publishing object (ID: ${objId})...`);
   await fetch(`/o/object-admin/v1.0/object-definitions/${objId}/publish`, {
     method: 'POST',
     headers
   });
 
-  // 3. 公開完了待ち（簡易的なポーリング）
+  // 3. Wait for publication to complete (Simple polling)
   let status = 'draft';
   while (status !== 'approved') {
     const checkStatus = await fetch(`/o/object-admin/v1.0/object-definitions/${objId}`, { headers });

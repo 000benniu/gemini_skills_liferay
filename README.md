@@ -1,63 +1,70 @@
-# Liferay デモ構築プロジェクト (Skill-Driven Architecture)
+# Liferay Demo Construction Project (Skill-Driven Architecture)
 
-## 概要
+## Overview
 
-本プロジェクトは、Liferay DXP のハイエンドなデモ環境を AI（Gemini CLI）を用いて迅速かつ自律的に構築するためのワークスペースです。
-デモ環境の構築自体がこのプロジェクトの目的ですが、技術的な最大の特徴は **「スキル（Skill）ベースのアーキテクチャ」** を採用している点です。
+This project is a workspace for rapidly and autonomously constructing a high-end Liferay DXP demo environment using AI (Gemini CLI).
+While building the demo environment is the goal of this project, its most significant technical feature is the adoption of a **"Skill-Driven Architecture"**.
 
-このリポジトリの構成と実行例を参考にすることで、「Gemini CLI のスキル機能をどのように定義し、どのように組み合わせれば、複雑な業務要件（製品固有の仕様、外部システム連携、独自のデプロイフローなど）を AI に実行させることができるか」を学ぶことができます。
+By referring to the structure and execution examples in this repository, you can learn "how to define Gemini CLI's skill features and how to combine them to have AI execute complex business requirements (product-specific specifications, external system integration, unique deployment flows, etc.)."
 
-## 「スキル（Skill）」とは？
+## What is a "Skill"?
 
-Gemini CLI における「スキル」とは、特定のタスクを遂行するための「専門知識・ルール・手順」をカプセル化したものです。
-AI は汎用的なコーディング知識を持っていますが、特定の製品（Liferay の独自仕様）や特定企業のルール（外部 API の仕様など）を正確に守らせるためには、都度細かい前提条件を指示する必要があります。
+In Gemini CLI, a "Skill" encapsulates "expertise, rules, and procedures" for accomplishing a specific task.
+Although AI possesses general coding knowledge, to accurately enforce compliance with a specific product (Liferay's unique specifications) or a specific company's rules (external API specifications, etc.), detailed prerequisites must be instructed each time.
 
-スキルを個別に定義し（`.gemini/skills/` 配下）、AI にプロンプト内で明示的に呼び出させることで、以下のようなメリットがあります：
-1. **正確性の担保**: Liferay のベストプラクティスや、特定システムの API 仕様を AI に厳密に遵守させることができます。
-2. **プロンプトの簡略化**: ユーザーは「〇〇のスキルを使って〇〇を作って」と指示するだけで済み、長大で複雑な前提条件をチャットごとに入力する必要がなくなります。
-3. **再利用性とモジュール化**: 一度定義した専門知識（スキル）は、他のタスクや別のプロジェクトで部品のように再利用できます。
+By defining skills individually (under `.gemini/skills/`) and having the AI explicitly call them in the prompt, there are the following advantages:
+1. **Best Practices**: It instructs the AI to comply with Liferay's best practices and the API specifications of specific systems.
+2. **Prompt Simplification**: Users only need to instruct, "Use the 〇〇 skill to create 〇〇," eliminating the need to input lengthy and complex prerequisites for each chat.
+3. **Reusability and Modularization**: Once specialized knowledge (a skill) is defined, it can be reused like a component in other tasks or different projects.
 
-## 本プロジェクトにおけるスキルの活用例
+## Examples of Skill Utilization in This Project
 
-本プロジェクトでは、社内ポータル構築に必要な要素を複数のスキルに分解して定義しています。
+In this project, the elements necessary for building an internal portal are broken down and defined into multiple skills.
 
-- `liferay-modern-fragment-guide`: モダンな Liferay フラグメント（HTML/CSS/JS）を作成するための独自のデザイン・実装ルール。
-- `servicenow-integration`: ServiceNow のインシデント情報を API 経由で取得し、表示するための手順と認証仕様。
-- `manual-api-integration`: 外部の業務マニュアルシステムから API 経由でデータを取得・表示するための仕様。
-- `liferay-ai-task-advisor`: OpenAI API (gpt-4o-mini) を活用した、AI によるタスク推奨機能の実装パターン。
-- `liferay-fragment-automation-core`: 作成した成果物を Liferay 環境に自動デプロイするためのスクリプトと手順。
+- `modern-ux-core-protocol`: Core UI/UX and Design Standards (CSS, JS, HTML, Mobile-First).
+- `liferay-modern-fragment-guide`: Unique design and implementation rules for creating modern Liferay fragments (HTML/CSS/JS).
+- `liferay-nav-template-generator`: Liferay Navigation Template Generator based on FreeMarker and NavItem API.
+- `liferay-api-best-practices`: Best practices for utilizing Liferay DXP Headless APIs (Delivery, Objects, Commerce, User).
+- `liferay-object-management`: Dynamic generation, publication, and management workflow for Object Definitions in Liferay DXP.
+- `liferay-ai-task-advisor`: AI-driven task recommendation pattern for Liferay DXP.
+- `gpt-4o-mini-caller`: Guide and code examples for calling the OpenAI gpt-4o-mini model.
+- `servicenow-integration`: Procedures and authentication specifications for retrieving and displaying ServiceNow incident information via API.
+- `manual-api-integration`: Specifications for retrieving and displaying data from an external business manual system via API.
+- `liferay-fragment-automation-core`: Scripts and procedures for automatically deploying the created artifacts to the Liferay environment.
+- `liferay-nav-template-deployer`: Automatic deployment guide for navigation menu display templates (ADT) in Liferay DXP.
+- `liferay-fragment-packager`: Expert guidance and tools for packaging Liferay Fragment Collections into ZIP files for manual import.
 
-## 実行例（スキルの実践的な使い方）
+## Execution Example (Practical Usage of Skills)
 
-ユーザーは Gemini CLI に対して、以下のような「シナリオ（プロンプト）」を投入します。
-このプロンプトを読むことで、**「ユーザーがどのような粒度でタスクを分割し、それぞれのタスクでどのスキルを AI に適用させているか」** という、スキルのオーケストレーション手法を理解することができます。
+Users input "scenarios (prompts)" like the following to the Gemini CLI.
+By reading this prompt, you can understand the skill orchestration method: **"At what level of granularity the user divides the tasks, and which skills the AI is instructed to apply in each task."**
 
-以下のテキストをコピーして Gemini CLI に貼り付けることで、複数のスキルを連携させた社内ポータルの自動構築プロセスを実際に体験できます。
+By copying and pasting the text below into the Gemini CLI, you can actually experience the automated construction process of an internal portal combining multiple skills.
 
 ```text
 
-# プロジェクト：Liferay電気という、家電製品の製造・販売を行う仮想会社の**社内ポータルサイト**新規構築
+# Project: New construction of an **internal portal site** for a virtual company called "Liferay Electric" that manufactures and sells home appliances.
 
-# タスク1 ヘッダーの作成
-`liferay-modern-fragment-guide`を使用し、見栄えの良いヘッダーを作成してください。ヘッダーには動的なメニュー も含めてください。
+# Task 1: Create Header
+Please use `liferay-modern-fragment-guide` to create a visually appealing header. Include a dynamic menu in the header.
 
-# タスク2 フッターの作成
-`liferay-modern-fragment-guide`を使用し、社内ポータルサイトのフッターを作成してください。見栄えの良いデザインにしたいです。
+# Task 2: Create Footer
+Please use `liferay-modern-fragment-guide` to create a footer for the internal portal site. I want a visually appealing design.
 
-# タスク3 ダッシュボードの作成
-社内ポータルサイトのダッシュボードを作成してください。
-1. 社員様の日常業務に役立つ社内ニュース、イベント、業務連絡、リンク集など、豊かなサンプル要素を多めに含めてください。
-2. `servicenow-integration`を使用し、ServiceNow側のインシデント をダッシュボードに表示してください。
-3. `manual-api-integration`を使用し、業務マニュアルをAPI経由で 取得してダッシュボードに表示してください。
+# Task 3: Create Dashboard
+Please create a dashboard for the internal portal site.
+1. Include plenty of rich sample elements such as internal news, events, business communications, and link collections that are useful for employees' daily work.
+2. Use `servicenow-integration` to display ServiceNow incidents on the dashboard.
+3. Use `manual-api-integration` to retrieve business manuals via API and display them on the dashboard.
 
-# タスク4 AIを活用したタスクコンサルタントの生成
-`liferay-ai-task-advisor`を使用し、ダッシュボードに  [AIが選ぶ今日のタスク]  ボタンを追加してください。
-このボタンをクリックすると、画面上に本日実施すべきタスクの上位3件が表示されます。
+# Task 4: Generate Task Consultant using AI
+Please use `liferay-ai-task-advisor` to add an [Today's Tasks Chosen by AI] button to the dashboard.
+When this button is clicked, the top 3 tasks to be performed today will be displayed on the screen.
 
-# タスク5 成果物をデプロイ
-`liferay-fragment-automation-core`を使い、作成したフラグメントをLiferayに直接デプロイ してください。
+# Task 5: Deploy Artifacts
+Please use `liferay-fragment-automation-core` to deploy the created fragments directly to Liferay.
 
 ```
 
 ---
-※ 各スキルの詳細な定義（プロンプトにどのように作用するか）については、`.gemini/skills/` ディレクトリ配下の各 `SKILL.md` や関連リファレンスを参照してください。
+* For detailed definitions of each skill (how they affect prompts), please refer to the respective `SKILL.md` and related references under the `.gemini/skills/` directory.

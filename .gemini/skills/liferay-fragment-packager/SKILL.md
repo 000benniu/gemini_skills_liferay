@@ -5,20 +5,20 @@ description: Expert guidance and tools for packaging Liferay Fragment Collection
 
 # Liferay Fragment Packager Skill
 
-このスキルは、Liferay DXP の「サイトビルダー > ページフラグメント」へインポート可能な ZIP ファイルを正しく生成するための手順とツールを定義します。
+This skill defines the procedures and tools to correctly generate a ZIP file that can be imported into Liferay DXP's "Site Builder > Page Fragments".
 
-## 1. Critical Structure Rule【絶対遵守】
+## 1. Critical Structure Rule [Strict Compliance]
 
-Liferay のインポーターは、ZIP ファイル内の構造に対して非常に厳格です。以下の構造を「一字一句違わず」再現する必要があります。
+The Liferay importer is extremely strict about the structure inside the ZIP file. It is necessary to reproduce the following structure "exactly word for word".
 
-### 1.1 Fragment Collection ZIP (推奨)
-コレクション全体をインポートする場合、**必ずルートディレクトリ（コレクション名と同名のフォルダ）を含める**必要があります。
+### 1.1 Fragment Collection ZIP (Recommended)
+When importing an entire collection, you must **always include the root directory (a folder with the same name as the collection name)**.
 
 ```
 collection-name.zip
-└── collection-name/           <-- ルートディレクトリが必須
-    ├── collection.json       <-- コレクションのメタデータ
-    └── fragments/            <-- 各フラグメントの親フォルダ
+└── collection-name/           <-- Root directory is required
+    ├── collection.json       <-- Collection metadata
+    └── fragments/            <-- Parent folder for each fragment
         ├── fragment-1/
         │   ├── fragment.json
         │   ├── index.html
@@ -31,10 +31,10 @@ collection-name.zip
 ```
 
 ### 1.2 Individual Fragment ZIP
-単一のフラグメントのみをインポートする場合：
+When importing only a single fragment:
 ```
 fragment-name.zip
-└── fragment-name/            <-- フラグメント名と同名のフォルダが必須
+└── fragment-name/            <-- Folder with the same name as the fragment name is required
     ├── fragment.json
     ├── index.html
     ├── index.css
@@ -43,31 +43,31 @@ fragment-name.zip
     └── thumbnail.png
 ```
 
-### 1.3 Naming Convention【絶対遵守】
-フラグメント名の重複によるエラーを防ぐため、**必ず `liferay-modern-fragment-guide` の「8. Naming Convention」に従って命名を行ってください。**
+### 1.3 Naming Convention [Strict Compliance]
+To prevent errors due to fragment name duplication, **always follow "8. Naming Convention" in `liferay-modern-fragment-guide` for naming.**
 
 ## 2. Packaging Workflow
 
-### Step 1: Prepare Metadata & Visuals【絶対遵守】
-インポート前に、メタデータ、アイコン、サムネイル画像が適切に準備されている必要があります。
-- **命名規約**: **`liferay-modern-fragment-guide` の「8. Naming Convention」** を遵守すること。
-- **メタデータ (`fragment.json`)**: **`liferay-modern-fragment-guide` の「7. Metadata & Visuals」** に従って `"icon": "third-party"` 等を設定すること。
-- **サムネイル画像 (`thumbnail.png`)**: **`liferay-modern-fragment-guide` の「7.2 サムネイル画像」** に従い、専用の Python スクリプトで画像を生成・配置すること。
+### Step 1: Prepare Metadata & Visuals [Strict Compliance]
+Before importing, metadata, icons, and thumbnail images must be properly prepared.
+- **Naming Convention**: Adhere to **"8. Naming Convention" in `liferay-modern-fragment-guide`**.
+- **Metadata (`fragment.json`)**: Set `"icon": "third-party"`, etc., according to **"7. Metadata & Visuals" in `liferay-modern-fragment-guide`**.
+- **Thumbnail Image (`thumbnail.png`)**: Following **"7.2 Thumbnail Image" in `liferay-modern-fragment-guide`**, use the dedicated Python script to generate and place the image.
 
-### Step 2: Content Filtering【重要】
-ZIP 内には、`collection.json`、`fragments/`、`resources/` 以外の不要なファイルを含めてはいけません。
+### Step 2: Content Filtering [Important]
+Do not include unnecessary files in the ZIP other than `collection.json`, `fragments/`, and `resources/`.
 
-### Step 3: ZIP Creation【絶対遵守】
-標準の OS 右クリック「ZIP化」やシェルコマンド `Compress-Archive` は、Liferay が解釈できないアーカイブを生成する可能性があるため、**提供された Python スクリプトを使用すること。**
+### Step 3: ZIP Creation [Strict Compliance]
+Standard OS right-click "ZIP creation" or the shell command `Compress-Archive` may generate an archive that Liferay cannot interpret, so **use the provided Python script.**
 
 ## 3. Tool Usage
 
 ### Scripts
-- `scripts/create_zip.py`: 指定されたディレクトリを、Liferay 互換のルートフォルダ付き ZIP にパッケージングします。このスクリプトは自動的に不要なファイルをフィルタリングします。
+- `scripts/create_zip.py`: Packages the specified directory into a Liferay-compatible ZIP with a root folder. This script automatically filters out unnecessary files.
 
 ```bash
 python .gemini/skills/liferay-fragment-packager/scripts/create_zip.py <source_dir> <output_zip_name>
 ```
 
 ## 4. References
-詳細なデプロイメントガイドについては `references/LIFERAY_DEPLOYMENT_GUIDE.md` を参照してください。
+For detailed deployment guides, please refer to `references/LIFERAY_DEPLOYMENT_GUIDE.md`.
